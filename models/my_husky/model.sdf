@@ -372,62 +372,8 @@
           </box>
 	</geometry>
 </visual>
-<!--
-        <sensor type="camera" name="my_sensor">
-          <camera>
-            <horizontal_fov>1.047</horizontal_fov>
-            <image>
-              <width>320</width>
-              <height>240</height>
-            </image>
-            <clip>
-              <near>0.1</near>
-              <far>100</far>
-            </clip>
-          </camera>
-          <always_on>1</always_on>
-          <update_rate>30</update_rate>
-          <visualize>true</visualize>
-        </sensor>
--->
 
-
-    <sensor type="gpu_ray" name="head_hokuyo_sensor">
-      <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
-      <update_rate>40</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <samples>720</samples>
-            <resolution>1</resolution>
-            <min_angle>-1.570796</min_angle>
-            <max_angle>1.570796</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.10</min>
-          <max>30.0</max>
-          <resolution>0.01</resolution>
-        </range>
-        <noise>
-          <type>gaussian</type>
-          <!-- Noise parameters based on published spec for Hokuyo laser
-               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
-               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
-               reading. -->
-          <mean>0.0</mean>
-          <stddev>0.01</stddev>
-        </noise>
-      </ray>
-      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
-        <topicName>/rrbot/laser/scan</topicName>
-        <frameName>base_link</frameName>
-      </plugin>
-    </sensor>
-
-
-    <sensor type="camera" name="camera1">
+      <sensor type="camera" name="camera1">
       <update_rate>30.0</update_rate>
       <camera name="head">
         <horizontal_fov>1.3962634</horizontal_fov>
@@ -453,10 +399,10 @@
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>rrbot/camera1</cameraName>
+        <cameraName>my_husky/camera1</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera_link</frameName>
+        <frameName>cam_link</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
@@ -465,39 +411,7 @@
         <distortionT2>0.0</distortionT2>
       </plugin>
     </sensor>
-<!--  
-  <sensor type="gpu_ray" name="head_hokuyo_sensor">
-      <pose>0 0 0 0 0 0</pose>
-      <visualize>false</visualize>
-      <update_rate>40</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <samples>720</samples>
-            <resolution>1</resolution>
-            <min_angle>-1.570796</min_angle>
-            <max_angle>1.570796</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.10</min>
-          <max>30.0</max>
-          <resolution>0.01</resolution>
-        </range>
-        <noise>
-          <type>gaussian</type>
-          <mean>0.0</mean>
-          <stddev>0.01</stddev>
-        </noise>
-      </ray>
-<visualize>true</visualize>
-      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
-        <topicName>/rrbot/laser/scan</topicName>
-        <frameName>hokuyo_link</frameName>
-      </plugin>
-    </sensor>
 
--->
   </link>
 
 
@@ -508,17 +422,9 @@
 
 
 
-
-
-<!--
-   <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/</robotNamespace> 
-    </plugin>
--->
-
   <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
     <updateRate>100.0</updateRate>
-    <robotNamespace>/</robotNamespace>
+    <robotNamespace>/my_husky</robotNamespace>
     <leftFrontJoint>front_left_joint</leftFrontJoint>
     <rightFrontJoint>front_right_joint</rightFrontJoint>
     <leftRearJoint>back_left_joint</leftRearJoint>
@@ -527,7 +433,7 @@
     <wheelSeparation>0.5709</wheelSeparation>
     <wheelDiameter>0.3555</wheelDiameter>
 
-    <robotBaseFrame>base_link</robotBaseFrame>
+    <robotBaseFrame>cam_link</robotBaseFrame>
  
    <torque>100</torque>
     <topicName>cmd_vel</topicName>
@@ -536,39 +442,6 @@
   </plugin>
 
 
-<!--
-  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-    <updateRate>100</updateRate>
-    <leftJoint>back_left_joint</leftJoint>
-    <rightJoint>back_right_joint</rightJoint>
-    <wheelSeparation>0.5709</wheelSeparation>
-    <wheelDiameter>0.3555</wheelDiameter>
-    <wheelAcceleration>1.0</wheelAcceleration>
-    <wheelTorque>35</wheelTorque>
-    <commandTopic>cmd_vel</commandTopic>
-    <odometryTopic>odom</odometryTopic>
-    <odometryFrame>odom</odometryFrame>
-    <robotBaseFrame>base_link</robotBaseFrame>
-    <odometrySource>1</odometrySource>
-    <publishWheelTF>true</publishWheelTF>
-    <publishOdom>true</publishOdom>
-    <publishWheelJointState>true</publishWheelJointState>
-    <legacyMode>false</legacyMode>
-  </plugin>
-
--->
-<!--
-   <plugin name="husky_diff_controller" filename="libhusky_gazebo_plugins.so">
-      <alwaysOn>true</alwaysOn>
-      <updateRate>100.0</updateRate>
-      <backLeftJoint>back_left_joint</backLeftJoint>
-      <backRightJoint>back_right_joint</backRightJoint>
-      <frontLeftJoint>front_left_joint</frontLeftJoint>
-      <frontRightJoint>front_right_joint</frontRightJoint>
-      <wheelSeparation>0.5709</wheelSeparation>
-      <wheelDiameter>0.3555</wheelDiameter>
-      <torque>35</torque>
-    </plugin>
--->
   </model>
 </sdf>
+
